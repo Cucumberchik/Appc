@@ -7,6 +7,8 @@ const CheckUser: FC<{ children: ReactNode }> = ({ children }): ReactNode => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const accessToken = localStorage.getItem("accessToken") || "";
   const refreshToken = localStorage.getItem("refreshToken") || "";
+  const accessTokenExpiration =
+    localStorage.getItem("accessTokenExpiration") || "";
 
   const { setAllPosts } = usePosts();
 
@@ -24,6 +26,16 @@ const CheckUser: FC<{ children: ReactNode }> = ({ children }): ReactNode => {
 
   const handleGetUser = async () => {
     setIsLoading(true);
+    if (Date.now() > +accessTokenExpiration) {
+      const { data } = await axios.patch(
+        `${import.meta.env.VITE_APP_BACKEND_URL}/auth/refresh`,
+        { refreshToken }
+      );
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+      localStorage.setItem("accessTokenExpiration", data.accessTokenExpiration);
+    }
+
     try {
       const { data } = await axios.get(
         `${import.meta.env.VITE_APP_BACKEND_URL}/auth/user`,
@@ -36,23 +48,10 @@ const CheckUser: FC<{ children: ReactNode }> = ({ children }): ReactNode => {
         `${import.meta.env.VITE_APP_BACKEND_URL}/post/get-all`
       );
 
-      setAllPosts(allPosts)
+      setAllPosts(allPosts);
 
       setUser(data.profile);
     } catch (e: any) {
-      if (refreshToken) {
-        const { data } = await axios.patch(
-          `${import.meta.env.VITE_APP_BACKEND_URL}/auth/refresh`,
-          { refreshToken }
-        );
-        localStorage.setItem("accessToken", data.accessToken);
-        localStorage.setItem("refreshToken", data.refreshToken);
-        localStorage.setItem(
-          "accessTokenExpiration",
-          data.accessTokenExpiration
-        );
-        window.location.reload();
-      }
     } finally {
       setIsLoading(false);
     }

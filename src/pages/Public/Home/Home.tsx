@@ -18,8 +18,11 @@ const Home: FC = (): ReactNode => {
     <>
       <MyProfil user={user} />
       <h2 className={scss.publick_header}>Публичные публекаций</h2>
-      {allPosts.map((post) => (
-        <Post post={post} />
+      {allPosts.map((post, idx) => (
+        <Post
+          post={post}
+          key={idx}
+        />
       ))}
     </>
   );
