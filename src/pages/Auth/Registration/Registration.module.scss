@@ -1,0 +1,42 @@
+.registration {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+
+  .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .form {
+      width: 450px;
+      height: 400px;
+      background-color: var(--surface-ground);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1.85rem;
+      border-radius: 0.65rem;
+
+      h3 {
+        text-align: center;
+        font-size: 24px;
+      }
+
+      .input_choose {
+        display: none;
+      }
+
+      .label_choose {
+        padding: 0.5rem 1rem;
+        color: #34d399;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        border: 1px solid #34d399;
+        text-align: center;
+      }
+    }
+  }
+}
